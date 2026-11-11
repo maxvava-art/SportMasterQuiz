@@ -1,0 +1,20 @@
+{
+  "version": "7.1 - revisione cautelativa",
+  "total_previous": 565,
+  "football_previous": 277,
+  "football_active": 132,
+  "football_quarantined": 145,
+  "other_sports_not_reviewed": 288,
+  "current_active_total": 420,
+  "football_by_topic": {
+    "coppe_europee": 62,
+    "serie_storica": 21,
+    "mondiali": 27,
+    "serie_moderna": 22
+  },
+  "note": "Selezione cautelativa e verifiche strutturali, NON verifica fattuale indipendente completa di ogni domanda. Alcune domande potrebbero richiedere ulteriori correzioni.",
+  "example_fix": {
+    "id": "ed018",
+    "source": "RSSSF: Italy Championship 1990/91"
+  }
+}
