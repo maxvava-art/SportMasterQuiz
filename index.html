@@ -224,6 +224,7 @@ header{position:sticky;background:rgba(5,17,30,.94);border-bottom:1px solid #2e4
 .feedbackExplanation{grid-column:1/-1;margin:0;font-size:1rem;line-height:1.6}
 #explanation.answerFeedback .activitySource{grid-column:1/-1;margin:0}
 @media(max-width:420px){#explanation.answerFeedback{padding:16px;grid-template-columns:1fr}.feedbackPoints{justify-self:start}}
+.sourceReturnHint{display:block;grid-column:1/-1;margin:2px 0 0;color:var(--muted);font-size:.9rem;line-height:1.5}
 </style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "SportMasterQuiz", "url": "https://sportmasterquiz.github.io/", "inLanguage": "it-IT", "description": "Quiz sportivi gratis su calcio, tennis, basket, ciclismo e Formula 1. Sblocca i livelli con i trofei o costruisci la tua carriera in All sports."}</script></head><body><header><div class="wrap nav"><button class="brand" onclick="goHome()" aria-label="SportMasterQuiz, torna alla home"><img src="logo-sportmasterquiz-motori.svg" alt="" onerror="this.style.display='none'"><span class="brandName">SportMasterQuiz</span></button><button type="button" class="shareTop" onclick="shareSite()" aria-label="Condividi il sito"><svg aria-hidden="true" viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"></path></svg><span>Condividi il sito</span></button><button class="menuToggle" id="menuToggle" aria-expanded="false" aria-controls="topMenu" onclick="toggleMenu()">☰ Menu</button><nav id="topMenu" class="topMenu" aria-label="Categorie sport"><button onclick="navSport('calcio')">Calcio</button><button onclick="navSport('tennis')">Tennis</button><button onclick="navSport('basket')">Basket</button><button onclick="navSport('ciclismo')">Ciclismo</button><button onclick="navSport('formula1')">Formula 1</button><button class="navChallenge" onclick="navSport('misto')">🔥 All sports</button></nav></div></header><main class="wrap"><noscript><p class="siteNotice">Per giocare occorre attivare JavaScript. Puoi comunque esplorare gli sport e leggere le informazioni sul gioco usando i collegamenti del sito.</p></noscript><section id="viewHome"><div class="hero"><div class="heroRibbon"><span class="liveDot"></span> QUIZ GRATUITI · SPORT E STORIA · SFIDE PER ESPERTI</div><div class="eyebrow">QUIZ SPORTIVI · GRATIS</div><div class="heroIdentity"><h1>La tua cultura sportiva <em>vale un trofeo?</em></h1><div class="heroLogo"><img src="logo-sportmasterquiz-motori.svg" alt="SportMasterQuiz" width="2172" height="724" decoding="async"></div></div><p class="lead"><span class="heroDesktopIntro"><span class="heroIntroLine">Quiz su <strong class="heroSportName">Calcio</strong>, <strong class="heroSportName">Tennis</strong>, <strong class="heroSportName">Basket</strong>, <strong class="heroSportName">Ciclismo</strong> e <strong class="heroSportName">Formula 1</strong>.</span><span class="heroIntroLine">Vinci i trofei per sbloccare i livelli.</span><span class="heroIntroLine">In <strong class="heroAllSports">All sports</strong> trovi anche le domande olimpiche e costruisci la tua carriera.</span><span class="heroIntroLine">Gratis, senza registrazione.</span></span><span class="heroMobileIntro"><span class="heroIntroLine">Scegli uno sport o prova <strong class="heroAllSports">All sports</strong>.</span><span class="heroIntroLine">Gratis, senza registrazione.</span></span></p><ul class="heroHighlights" aria-label="Le sfide di SportMasterQuiz">
 <li class="heroHighlight highlightQuiz"><span class="highlightIcon" aria-hidden="true">⚡</span><div class="highlightCopy"><strong>6 sezioni di quiz</strong><span>Trova la tua sfida</span></div></li>
 <li class="heroHighlight highlightLevels"><span class="highlightIcon" aria-hidden="true">🏆</span><div class="highlightCopy"><strong>3 livelli da conquistare</strong><span>Vinci i trofei e sali di livello</span></div></li>
@@ -367,7 +368,7 @@ function resetCareer(){
 function shuffled(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function topicMatch(q,topic){return topic==='serie_all' ? ['serie_storica','serie_moderna'].includes(q.topic) : q.topic===topic}
 function toggle(view){['viewHome','viewCategory','viewQuiz','viewAbout'].forEach(v=>el(v).classList.toggle('hidden',v!==view));window.scrollTo(0,0)}
-function goHome(){toggle('viewHome')}
+function goHome(){clearSourceReturn();toggle('viewHome')}
 function showAbout(){toggle('viewAbout')}
 const trainingLevelChoice={};
 function isTrainingGame(){return currentCat!=='misto'&&currentTopic!==null}
@@ -376,6 +377,7 @@ function chooseTrainingLevel(level){
  if(Object.hasOwn(trophySports,currentCat)&&trophyLevels.includes(level))trainingLevelChoice[currentCat]=level;
 }
 function openCategory(cat){
+ clearSourceReturn();
  if(cat==='olimpiadi'||cat==='misto'){startQuiz('misto');return}
  const c=categories.find(item=>item.id===cat);if(!c)return;
  currentCat=cat;renderLevelPicker(cat);
@@ -408,9 +410,9 @@ function renderQuestionPhoto(q){
  };
  card.classList.remove('hidden');credit.classList.remove('hidden');
  const author=document.createElement('span');author.textContent='Foto: '+q.photo.author+' · ';credit.append(author);
- const source=document.createElement('a');source.href=q.photo.source;source.target='_blank';source.rel='noopener noreferrer';source.textContent='Fonte';credit.append(source);
+ const source=document.createElement('a');source.href=q.photo.source;prepareQuizReference(source);source.textContent='Fonte';credit.append(source);
  credit.append(document.createTextNode(' · '));
- const license=document.createElement('a');license.href=q.photo.licenseUrl;license.target='_blank';license.rel='noopener noreferrer';license.textContent=q.photo.license;credit.append(license);
+ const license=document.createElement('a');license.href=q.photo.licenseUrl;prepareQuizReference(license);license.textContent=q.photo.license;credit.append(license);
  credit.append(document.createTextNode(' · Foto ridimensionata; sfocatura usata durante il gioco.'));
  img.style.filter=photoBlur[revealedPhoto];img.src=q.photo.src;
  renderPhotoReveal();
@@ -583,6 +585,7 @@ function pickMixedSession(){
 }
 
 function startQuiz(cat,topic=null){
+ clearSourceReturn();
  if(cat==='olimpiadi'){cat='misto';topic=null;}
  const category=categories.find(c=>c.id===cat);if(!category)return;
  if(cat==='misto')topic=null;else if(topic!==null&&!category.topics.some(t=>t[0]===topic))return;
@@ -698,7 +701,7 @@ function answer(idx){
  const hintButton=el('hintNext');if(hintButton)hintButton.disabled=true;
 }
 function finishQuestion(correct,points,detail){
- if(selected!==null)return;const q=current[step];selected=correct?'correct':'wrong';
+ if(selected!==null)return;clearSourceReturn();const q=current[step];selected=correct?'correct':'wrong';
  if(correct)score++;gamePoints+=points;gameWeighted+=points*(careerWeights[q.level]||1);
  el('formatPoints').textContent='+'+points+(points===1?' PUNTO':' PUNTI');
  const feedback=el('explanation');feedback.className='note answerFeedback '+(correct?'feedbackCorrect':points>0?'feedbackPartial':'feedbackWrong');
@@ -709,11 +712,11 @@ function finishQuestion(correct,points,detail){
  explanation.textContent=(detail?detail+' ':'')+solution+q.why;
  feedback.replaceChildren(heading,earned,explanation);
  requestAnimationFrame(()=>{if(selected!==null){scrollQuizTo(feedback)}});
- if(q.source){const a=document.createElement('a');a.href=q.source;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Verifica la fonte ↗';a.className='activitySource';el('explanation').append(' ',a)}
+ if(q.source){const a=document.createElement('a');a.href=q.source;prepareQuizReference(a);a.textContent='Verifica la fonte';a.className='activitySource';const hint=document.createElement('span');hint.className='sourceReturnHint';hint.textContent='Per continuare la sfida, torna qui con Indietro.';el('explanation').append(a,hint)}
  el('progressBar').style.width=`${100*(step+1)/current.length}%`;el('nextBtn').disabled=false;updateGameScore();
 }
 function finishGame(){
- if(finishedGameSaved||!current.length||step<current.length||selected===null)return;finishedGameSaved=true;
+ if(finishedGameSaved||!current.length||step<current.length||selected===null)return;clearSourceReturn();finishedGameSaved=true;
  el('quizPlay').classList.add('hidden');el('quizResult').classList.remove('hidden');
  const max=current.length*3,prize=el('resultPrize');let shareText=null;prize.replaceChildren();
  el('finalScore').textContent=gamePoints+' / '+max+' punti';
@@ -751,7 +754,7 @@ function finishGame(){
  el('resultReplayBtn').textContent=isTrainingGame()?'Ripeti l’allenamento':'Gioca ancora';heading.tabIndex=-1;heading.focus({preventScroll:true});scrollQuizTo(heading);
 }
 
-function nextQuestion(){if(selected===null)return;step++;if(step>=current.length)finishGame();else renderQuestion()}
+function nextQuestion(){if(selected===null)return;clearSourceReturn();step++;if(step>=current.length)finishGame();else renderQuestion()}
 function skipUnavailablePhoto(){
  if(selected!==null||!current[step]?.photo||el('playerPhoto').dataset.ready==='true')return;
  current.splice(step,1);if(!current.length){goHome();return}if(step>=current.length){selected='skipped';finishGame()}else renderQuestion();
@@ -797,6 +800,96 @@ function scrollToArenas(){
 }
 
 
+// References use this tab, so the browser Back button returns to the game.
+// Keep only this tab's pending game, never HTML or external page contents.
+const sourceReturnKey='smq_source_return_v1';
+function clearSourceReturn(){
+ try{sessionStorage.removeItem(sourceReturnKey)}catch(e){}
+ try{if(history.state?.smqSourceReturn){const state={...history.state};delete state.smqSourceReturn;history.replaceState(state,'',location.href)}}catch(e){}
+}
+function sourceQuestionSignature(q){return JSON.stringify([q.q,q.a,q.steps,q.hints,q.items,q.pairs,q.value,q.tol,q.photo?.src])}
+function saveSourceReturn(){
+ if(progressPersistenceFailed||!current.length||step>=current.length||finishedGameSaved||el('viewQuiz').classList.contains('hidden'))return false;
+ const chosen=el('answers').querySelector('.answer.wrong')||el('answers').querySelector('.answer.correct');
+ const snapshot={version:1,savedAt:Date.now(),url:location.href,cat:currentCat,topic:currentTopic,level:playingLevel,
+  questions:current.map(q=>({id:q.id,level:q.level,signature:sourceQuestionSignature(q),repeat:Boolean(q.__repeat)})),
+  step,score,points:gamePoints,weighted:gameWeighted,selected,hints:revealedHints,photo:revealedPhoto,
+  order:[...orderState],matches:[...matchState],rows:[...matchRows],choices:[...matchChoices],
+  answer:chosen?Number(chosen.dataset.index):null,estimate:el('estimateNumber')?.value??null};
+ try{
+  sessionStorage.setItem(sourceReturnKey,JSON.stringify(snapshot));
+  history.replaceState({...history.state,smqSourceReturn:true},'',location.href);return true;
+ }catch(e){clearSourceReturn();return false}
+}
+function openQuizReference(event){
+ if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+ const link=event.currentTarget,url=new URL(link.href,location.href);
+ if(!['https:','http:'].includes(url.protocol)){event.preventDefault();return}
+ if(saveSourceReturn())return;
+ // If this browser disallows temporary storage, keep the live game in place.
+ event.preventDefault();window.open(url.href,'_blank','noopener,noreferrer');
+ const notice=document.createElement('span');notice.className='sourceReturnHint';notice.textContent='La fonte si apre in un’altra scheda: chiudila per continuare la sfida.';
+ const parent=link.parentElement;parent.querySelector('.sourceReturnHint')?.remove();parent.append(notice);
+}
+function prepareQuizReference(link){
+ link.target='_self';link.rel='noreferrer';link.onclick=openQuizReference;
+ link.title='Apri la fonte e usa Indietro per continuare la sfida';
+}
+function restoreSourceReturn(){
+ if(!history.state?.smqSourceReturn)return false;
+ let snapshot;
+ try{
+  snapshot=JSON.parse(sessionStorage.getItem(sourceReturnKey)||'null');
+  const category=categories.find(c=>c.id===snapshot?.cat),permutation=a=>Array.isArray(a)&&a.length===4&&[0,1,2,3].every(v=>a.includes(v));
+  if(!snapshot||snapshot.version!==1||snapshot.url!==location.href||!Number.isFinite(snapshot.savedAt)||Date.now()-snapshot.savedAt>86400000||snapshot.savedAt>Date.now()+60000||!category||snapshot.cat==='olimpiadi'||!trophyLevels.includes(snapshot.level)||![null,'correct','wrong'].includes(snapshot.selected))throw Error('Invalid saved game');
+  if(snapshot.topic!==null&&(snapshot.cat==='misto'||!category.topics.some(t=>t[0]===snapshot.topic)))throw Error('Invalid training topic');
+  if(!Array.isArray(snapshot.questions)||snapshot.questions.length<1||snapshot.questions.length>10||new Set(snapshot.questions.map(q=>q.id)).size!==snapshot.questions.length||!Number.isInteger(snapshot.step)||snapshot.step<0||snapshot.step>=snapshot.questions.length)throw Error('Invalid question list');
+  const byId=new Map(questions.map(q=>[q.id,q]));
+  const savedQuestions=snapshot.questions.map(saved=>{
+   const q=byId.get(saved.id);
+   if(!q||q.level!==saved.level||sourceQuestionSignature(q)!==saved.signature||(snapshot.cat!=='misto'&&(q.cat!==snapshot.cat||q.level!==snapshot.level||(snapshot.topic&&!topicMatch(q,snapshot.topic)))))throw Error('Saved questions have changed');
+   return {...q,__repeat:Boolean(saved.repeat)};
+  });
+  const answered=snapshot.step+Number(snapshot.selected!==null);
+  if(!Number.isInteger(snapshot.score)||snapshot.score<0||snapshot.score>answered||!Number.isInteger(snapshot.points)||snapshot.points<0||snapshot.points>answered*3||!Number.isFinite(snapshot.weighted)||snapshot.weighted<0||snapshot.weighted>answered*6)throw Error('Invalid saved score');
+  if(![1,2,3].includes(snapshot.hints)||![1,2,3].includes(snapshot.photo)||!permutation(snapshot.order)||!permutation(snapshot.rows)||!permutation(snapshot.choices)||!Array.isArray(snapshot.matches)||snapshot.matches.length!==4||snapshot.matches.some(v=>!['','0','1','2','3'].includes(v)))throw Error('Invalid activity state');
+  // A page restored from the browser cache already has the exact live state.
+  if(current.length&&!el('viewQuiz').classList.contains('hidden')&&currentCat===snapshot.cat&&step===snapshot.step&&current[step]?.id===savedQuestions[snapshot.step].id){clearSourceReturn();return true}
+  current=savedQuestions;currentCat=snapshot.cat;currentTopic=snapshot.topic;playingLevel=snapshot.level;
+  step=snapshot.step;score=0;gamePoints=0;gameWeighted=0;selected=null;finishedGameSaved=false;
+  if(currentCat!=='misto'){if(isTrainingGame())trainingLevelChoice[currentCat]=playingLevel;else sportLevelChoice[currentCat]=playingLevel}
+  toggle('viewQuiz');el('quizBack').textContent=quizBackLabel();el('quizPlay').classList.remove('hidden');el('quizResult').classList.add('hidden');
+  const subtitle=currentTopic?category.topics.find(t=>t[0]===currentTopic)[1]:'Quiz completo';
+  el('quizCategory').textContent=category.name+' · '+(currentCat==='misto'?'Difficoltà crescente':(isTrainingGame()?'Allenamento · ':'')+subtitle+' · '+careerLevelNames[playingLevel])+(current.length<10?' · Partita da '+current.length+' prove a questo livello':'');
+  renderQuestion();const q=current[step];revealedHints=snapshot.hints;revealedPhoto=snapshot.photo;
+  orderState=[...snapshot.order];matchState=[...snapshot.matches];matchRows=[...snapshot.rows];matchChoices=[...snapshot.choices];
+  if(q.format==='indizi')renderHints();
+  if(q.format==='ordina')renderOrder();
+  if(q.format==='abbina')renderMatches();
+  if(q.format==='stima'){
+   if(typeof snapshot.estimate!=='string'||snapshot.estimate.length>50)throw Error('Invalid estimate');
+   el('estimateNumber').value=snapshot.estimate;el('estimateNumber').oninput();
+  }
+  if(q.photo){el('playerPhoto').style.filter=photoBlur[revealedPhoto];renderPhotoReveal()}
+  // Replay only the current answer to rebuild its locked controls and feedback.
+  // This does not call startQuiz/nextQuestion or write career/trophy progress.
+  if(snapshot.selected!==null){
+   if(q.format==='ordina')submitOrder();
+   else if(q.format==='abbina')submitMatches();
+   else if(q.format==='stima')submitEstimate();
+   else{
+    if(!Number.isInteger(snapshot.answer)||snapshot.answer<0||snapshot.answer>=q.a.length)throw Error('Invalid saved answer');
+    if(q.photo)el('playerPhoto').dataset.ready='true';answer(snapshot.answer);
+   }
+   if(selected!==snapshot.selected)throw Error('Saved answer does not match');
+  }
+  score=snapshot.score;gamePoints=snapshot.points;gameWeighted=snapshot.weighted;updateGameScore();clearSourceReturn();
+  requestAnimationFrame(()=>{const target=selected!==null?el('explanation'):el('questionText');scrollQuizTo(target);target.focus({preventScroll:true})});
+  return true;
+ }catch(e){clearSourceReturn();current=[];selected=null;goHome();return false}
+}
+window.addEventListener('pageshow',()=>restoreSourceReturn());
+
 function openSportLink(event,cat){
  if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
  event.preventDefault();openCategory(cat);
@@ -809,8 +902,9 @@ function openLinkedQuiz(){
  for(const key of ['sport','tema','gioca'])params.delete(key);
  const search=params.toString();history.replaceState(null,'',location.pathname+(search?'?'+search:'')+location.hash);
 }
-openLinkedQuiz();
+if(!restoreSourceReturn())openLinkedQuiz();
 </script></body></html>
+
 
 
 
