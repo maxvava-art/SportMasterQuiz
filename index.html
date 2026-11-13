@@ -624,6 +624,7 @@ function renderResultTrack(){
   const li=document.createElement('li');li.setAttribute('aria-label',label);li.title=label;if(isCurrent)li.setAttribute('aria-current','step');
   const dot=document.createElement('span');dot.className='resultDot '+kind+(isCurrent?' active':'');dot.setAttribute('aria-hidden','true');
   dot.textContent=kind==='correct'?'✓':kind==='wrong'?'✕':kind==='partial'?'◐':['skipped','unknown','unavailable'].includes(kind)?'—':kind==='current'?i+1:'';
+  if(kind==='wrong')dot.innerHTML='<svg viewBox="0 0 24 24" width="72%" height="72%" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.9" stroke-linecap="round"><path d="M5 5.2C8.4 7.7 13.2 14.9 18.6 18.7"/><path d="M18.6 4.5C15.7 9 10.6 15.5 5.4 19.2"/></svg>';
   li.append(dot);track.append(li);
  }
 }
