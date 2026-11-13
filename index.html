@@ -225,6 +225,11 @@ header{position:sticky;background:rgba(5,17,30,.94);border-bottom:1px solid #2e4
 #explanation.answerFeedback .activitySource{grid-column:1/-1;margin:0}
 @media(max-width:420px){#explanation.answerFeedback{padding:16px;grid-template-columns:1fr}.feedbackPoints{justify-self:start}}
 .sourceReturnHint{display:block;grid-column:1/-1;margin:2px 0 0;color:var(--muted);font-size:.9rem;line-height:1.5}
+
+/* One clear points badge; no empty instruction row on classic questions. */
+.formatHeader .formatMax{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border-radius:8px;background:#ffd475;color:#172638;font-size:.9rem;font-weight:850;line-height:1.25;letter-spacing:.025em;white-space:nowrap}
+.formatRule:empty{display:none}
+@media(max-width:510px){.formatHeader{gap:9px;align-items:center}.formatHeader .formatMax{font-size:.85rem;padding:8px 10px}}
 </style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "SportMasterQuiz", "url": "https://sportmasterquiz.github.io/", "inLanguage": "it-IT", "description": "Quiz sportivi gratis su calcio, tennis, basket, ciclismo e Formula 1. Sblocca i livelli con i trofei o costruisci la tua carriera in All sports."}</script></head><body><header><div class="wrap nav"><button class="brand" onclick="goHome()" aria-label="SportMasterQuiz, torna alla home"><img src="logo-sportmasterquiz-motori.svg" alt="" onerror="this.style.display='none'"><span class="brandName">SportMasterQuiz</span></button><button type="button" class="shareTop" onclick="shareSite()" aria-label="Condividi il sito"><svg aria-hidden="true" viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"></path></svg><span>Condividi il sito</span></button><button class="menuToggle" id="menuToggle" aria-expanded="false" aria-controls="topMenu" onclick="toggleMenu()">☰ Menu</button><nav id="topMenu" class="topMenu" aria-label="Categorie sport"><button onclick="navSport('calcio')">Calcio</button><button onclick="navSport('tennis')">Tennis</button><button onclick="navSport('basket')">Basket</button><button onclick="navSport('ciclismo')">Ciclismo</button><button onclick="navSport('formula1')">Formula 1</button><button class="navChallenge" onclick="navSport('misto')">🔥 All sports</button></nav></div></header><main class="wrap"><noscript><p class="siteNotice">Per giocare occorre attivare JavaScript. Puoi comunque esplorare gli sport e leggere le informazioni sul gioco usando i collegamenti del sito.</p></noscript><section id="viewHome"><div class="hero"><div class="heroRibbon"><span class="liveDot"></span> QUIZ GRATUITI · SPORT E STORIA · SFIDE PER ESPERTI</div><div class="eyebrow">QUIZ SPORTIVI · GRATIS</div><div class="heroIdentity"><h1>La tua cultura sportiva <em>vale un trofeo?</em></h1><div class="heroLogo"><img src="logo-sportmasterquiz-motori.svg" alt="SportMasterQuiz" width="2172" height="724" decoding="async"></div></div><p class="lead"><span class="heroDesktopIntro"><span class="heroIntroLine">Quiz su <strong class="heroSportName">Calcio</strong>, <strong class="heroSportName">Tennis</strong>, <strong class="heroSportName">Basket</strong>, <strong class="heroSportName">Ciclismo</strong> e <strong class="heroSportName">Formula 1</strong>.</span><span class="heroIntroLine">Vinci i trofei per sbloccare i livelli.</span><span class="heroIntroLine">In <strong class="heroAllSports">All sports</strong> trovi anche le domande olimpiche e costruisci la tua carriera.</span><span class="heroIntroLine">Gratis, senza registrazione.</span></span><span class="heroMobileIntro"><span class="heroIntroLine">Scegli uno sport o prova <strong class="heroAllSports">All sports</strong>.</span><span class="heroIntroLine">Gratis, senza registrazione.</span></span></p><ul class="heroHighlights" aria-label="Le sfide di SportMasterQuiz">
 <li class="heroHighlight highlightQuiz"><span class="highlightIcon" aria-hidden="true">⚡</span><div class="highlightCopy"><strong>6 sezioni di quiz</strong><span>Trova la tua sfida</span></div></li>
 <li class="heroHighlight highlightLevels"><span class="highlightIcon" aria-hidden="true">🏆</span><div class="highlightCopy"><strong>3 livelli da conquistare</strong><span>Vinci i trofei e sali di livello</span></div></li>
@@ -420,7 +425,7 @@ function renderQuestionPhoto(q){
 function renderPhotoReveal(){
  const q=current[step];if(!q||!q.photo)return;const pts=4-revealedPhoto;el('formatBadge').textContent='Foto che si svela';
  el('formatPoints').textContent=pts+(pts===1?' PUNTO':' PUNTI')+' IN PALIO';
- el('formatRule').textContent=pts+(pts===1?' punto':' punti')+' se indovini ora. '+(revealedPhoto<3?'Puoi rendere la foto più nitida prima dell’unica risposta.':'La foto è nitida: hai una sola risposta.');
+ el('formatRule').textContent=(revealedPhoto<3?'Puoi rendere la foto più nitida prima dell’unica risposta.':'La foto è nitida: hai una sola risposta.');
  let btn=el('photoNext');
  if(!btn){btn=document.createElement('button');btn.type='button';btn.id='photoNext';btn.className='secondary hintNext';btn.onclick=revealPhoto;el('activityArea').append(btn);}
  if(revealedPhoto<3){btn.textContent='Rendi la foto più nitida · risponderai per '+(3-revealedPhoto)+(revealedPhoto===2?' punto':' punti');btn.disabled=selected!==null||el('playerPhoto').dataset.ready!=='true';if(el('playerPhoto').dataset.ready!=='true')btn.textContent='Caricamento della foto…';}else btn.remove();
@@ -625,7 +630,7 @@ function renderQuestion(){
  el('nextBtn').disabled=true;el('nextBtn').textContent=step===current.length-1?'Mostra risultato →':'Prossima prova →';
  el('answers').replaceChildren();el('activityArea').replaceChildren();el('activityError').textContent='';el('activityNotice').textContent='';
  el('careerRule').textContent=goalText();
- el('formatRule').textContent='3 punti se rispondi correttamente. Una sola risposta.';
+ el('formatRule').textContent='';
  if(q.format==='carriera'){
   const caption=document.createElement('p');caption.className='activityCaption';caption.textContent='Alcune tappe in ordine cronologico, non l’intera carriera.';el('activityArea').append(caption);
   const path=document.createElement('ol');path.className='careerPath';path.setAttribute('aria-label','Tappe della carriera, in ordine');
@@ -633,11 +638,11 @@ function renderQuestion(){
  }
  if(q.format==='indizi')renderHints();
  if(q.format==='ordina'){
-  el('formatRule').textContent='Dal più antico al più recente. Usa le frecce, poi conferma: 3 punti per l’ordine esatto, punti parziali per le posizioni corrette.';renderOrder();
+  el('formatRule').textContent='Dal più antico al più recente. Usa le frecce, poi conferma: puoi ottenere punti anche con un ordine parzialmente corretto.';renderOrder();
  }else if(q.format==='stima'){
   renderEstimate();
  }else if(q.format==='abbina'){
-  el('formatRule').textContent='Scegli una risposta diversa per ogni riga, poi conferma: 3 punti se tutte le coppie sono corrette, punti parziali per le altre.';renderMatches();
+  el('formatRule').textContent='Scegli una risposta diversa per ogni riga, poi conferma. Puoi ottenere punti anche con abbinamenti parzialmente corretti.';renderMatches();
  }else{
   shuffled(q.a.map((label,i)=>({label,i}))).forEach(choice=>{
    const b=document.createElement('button');b.type='button';b.className='answer';b.textContent=choice.label;b.onclick=()=>answer(choice.i);b.dataset.index=choice.i;b.disabled=Boolean(q.photo);el('answers').append(b);
@@ -648,7 +653,7 @@ function renderQuestion(){
 }
 function scrollQuizTo(node){const header=document.querySelector('header');window.scrollTo({top:Math.max(0,node.getBoundingClientRect().top+window.scrollY-header.getBoundingClientRect().height-18),behavior:'auto'})}
 function renderHints(){
- const q=current[step],available=4-revealedHints;el('formatRule').textContent=available+(available===1?' punto':' punti')+' se indovini ora. '+(revealedHints<3?'Puoi chiedere altri indizi prima dell’unica risposta.':'Tutti gli indizi sono visibili: hai una sola risposta.');
+ const q=current[step];el('formatRule').textContent=(revealedHints<3?'Puoi chiedere altri indizi prima dell’unica risposta.':'Tutti gli indizi sono visibili: hai una sola risposta.');
  el('formatPoints').textContent=(4-revealedHints)+((4-revealedHints)===1?' PUNTO':' PUNTI')+' IN PALIO';
  el('activityArea').innerHTML='<ol class="hintList" aria-label="Indizi disponibili">'+q.hints.map((hint,i)=>'<li class="'+(i<revealedHints?'revealed':'locked')+'"><span class="hintNumber">'+(i+1)+'</span><span>'+(i<revealedHints?escapeQuiz(hint):'Indizio ancora da scoprire')+'</span></li>').join('')+'</ol>'+(revealedHints<3?'<button type="button" class="secondary hintNext" id="hintNext" onclick="revealHint()">Un altro indizio · risponderai per '+(3-revealedHints)+(revealedHints===2?' punto':' punti')+'</button>':'<p class="activityCaption">Tutti gli indizi sono visibili. Scegli la tua risposta.</p>');
 }
