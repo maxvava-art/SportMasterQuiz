@@ -313,7 +313,18 @@ header{position:sticky;background:rgba(5,17,30,.94);border-bottom:1px solid #2e4
 @media(max-width:480px){.quizFootballGrid .fgCell{min-height:98px}.quizFootballGrid .fgTable th{font-size:.88rem}}
 
 </style>
-</head><body><header><div class="wrap nav"><button class="brand" onclick="goHome()" aria-label="SportMasterQuiz, torna alla home"><img src="logo-sportmasterquiz-motori.svg" alt="" onerror="this.style.display='none'"><span class="brandName">SportMasterQuiz</span></button><button type="button" class="shareTop" onclick="shareSite()" aria-label="Condividi il sito"><svg aria-hidden="true" viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"></path></svg><span>Condividi il sito</span></button><button class="menuToggle" id="menuToggle" aria-expanded="false" aria-controls="topMenu" onclick="toggleMenu()">☰ Menu</button><nav id="topMenu" class="topMenu" aria-label="Categorie sport"><button onclick="navSport('calcio')">Calcio</button><button onclick="navSport('tennis')">Tennis</button><button onclick="navSport('basket')">Basket</button><button onclick="navSport('ciclismo')">Ciclismo</button><button onclick="navSport('formula1')">Formula 1</button><button class="navChallenge" onclick="navSport('misto')">🔥 All sports</button></nav></div></header><main class="wrap"><noscript><p class="siteNotice">Per giocare occorre attivare JavaScript. Puoi comunque esplorare gli sport e leggere le informazioni sul gioco usando i collegamenti del sito.</p></noscript><section id="viewHome"><div class="hero"><div class="heroRibbon"><span class="liveDot"></span> QUIZ GRATUITI · SPORT E STORIA · SFIDE PER ESPERTI</div><div class="eyebrow">QUIZ SPORTIVI · GRATIS</div><div class="heroIdentity"><h1>La tua cultura sportiva <em>vale un trofeo?</em></h1><div class="heroLogo"><img src="logo-sportmasterquiz-motori.svg" alt="SportMasterQuiz" width="2172" height="724" decoding="async"></div></div><p class="lead"><span class="heroDesktopIntro"><span class="heroIntroLine">Quiz su <strong class="heroSportName">Calcio</strong>, <strong class="heroSportName">Tennis</strong>, <strong class="heroSportName">Basket</strong>, <strong class="heroSportName">Ciclismo</strong> e <strong class="heroSportName">Formula 1</strong>.</span><span class="heroIntroLine">Vinci i trofei per sbloccare i livelli.</span><span class="heroIntroLine">In <strong class="heroAllSports">All sports</strong> trovi anche le domande olimpiche e costruisci la tua carriera.</span><span class="heroIntroLine">Gratis, senza registrazione.</span></span><span class="heroMobileIntro"><span class="heroIntroLine">Scegli uno sport o prova <strong class="heroAllSports">All sports</strong>.</span><span class="heroIntroLine">Gratis, senza registrazione.</span></span></p><ul class="heroHighlights" aria-label="Le sfide di SportMasterQuiz">
+<style id="quizEffectsStyles">
+/* Sound preference is always reachable, including during a game. */
+.nav{grid-template-columns:auto minmax(0,1fr) auto auto;gap:10px 14px}.nav>.soundToggle{grid-column:3;grid-row:1}.nav>.shareTop{grid-column:4}
+.soundToggle{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:9px;border:1px solid #38576c;border-radius:12px;background:#172c40;color:#a5b6c6;flex-shrink:0}.soundToggle:hover:enabled{border-color:var(--sky);color:#d4eff8}.soundToggle[aria-pressed=true]{color:var(--lime);border-color:#83a957;background:#203c34}.soundToggle:disabled{opacity:.55;cursor:default}.soundToggle:focus-visible{outline:3px solid var(--sky);outline-offset:3px}.soundToggle svg{display:block;flex-shrink:0}
+.quizCelebrationCanvas{position:fixed;inset:0;width:100%;height:100%;z-index:25;pointer-events:none}
+#resultPrize.celebrateTrophy{border-color:#eecf7e;box-shadow:0 0 0 2px #ffd47522,0 8px 32px #ffd4751f}#resultPrize.celebrateCareer{border-color:#80d9c0;box-shadow:0 0 0 2px #69d8fb22,0 8px 32px #69d8fb1f}
+@media(max-width:900px){.nav{grid-template-columns:minmax(0,1fr) auto auto auto;gap:8px}.nav>.soundToggle{grid-column:2}.nav>.shareTop{grid-column:3}.nav>.menuToggle{grid-column:4}.nav>.topMenu{grid-column:1/-1;grid-row:auto}.soundToggle{width:42px;height:42px}}
+@media(max-width:380px){.nav>.menuToggle{width:42px;min-width:42px;padding:9px;font-size:0}.nav>.menuToggle::before{content:'☰';font-size:1rem}.brandName{font-size:.94rem}}
+@media(prefers-reduced-motion:reduce){.quizCelebrationCanvas{display:none}}
+
+</style>
+</head><body><header><div class="wrap nav"><button class="brand" onclick="goHome()" aria-label="SportMasterQuiz, torna alla home"><img src="logo-sportmasterquiz-motori.svg" alt="" onerror="this.style.display='none'"><span class="brandName">SportMasterQuiz</span></button><button type="button" id="quizAudioToggle" class="soundToggle" onclick="toggleQuizAudio()" aria-label="Attiva i suoni" aria-pressed="false" title="Attiva i suoni"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4Z"/><path d="m16 9 5 6m0-6-5 6"/></svg></button><span id="quizAudioStatus" class="visuallyHidden" role="status" aria-live="polite"></span><button type="button" class="shareTop" onclick="shareSite()" aria-label="Condividi il sito"><svg aria-hidden="true" viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"></path></svg><span>Condividi il sito</span></button><button class="menuToggle" id="menuToggle" aria-label="Menu" aria-expanded="false" aria-controls="topMenu" onclick="toggleMenu()">☰ Menu</button><nav id="topMenu" class="topMenu" aria-label="Categorie sport"><button onclick="navSport('calcio')">Calcio</button><button onclick="navSport('tennis')">Tennis</button><button onclick="navSport('basket')">Basket</button><button onclick="navSport('ciclismo')">Ciclismo</button><button onclick="navSport('formula1')">Formula 1</button><button class="navChallenge" onclick="navSport('misto')">🔥 All sports</button></nav></div></header><main class="wrap"><noscript><p class="siteNotice">Per giocare occorre attivare JavaScript. Puoi comunque esplorare gli sport e leggere le informazioni sul gioco usando i collegamenti del sito.</p></noscript><section id="viewHome"><div class="hero"><div class="heroRibbon"><span class="liveDot"></span> QUIZ GRATUITI · SPORT E STORIA · SFIDE PER ESPERTI</div><div class="eyebrow">QUIZ SPORTIVI · GRATIS</div><div class="heroIdentity"><h1>La tua cultura sportiva <em>vale un trofeo?</em></h1><div class="heroLogo"><img src="logo-sportmasterquiz-motori.svg" alt="SportMasterQuiz" width="2172" height="724" decoding="async"></div></div><p class="lead"><span class="heroDesktopIntro"><span class="heroIntroLine">Quiz su <strong class="heroSportName">Calcio</strong>, <strong class="heroSportName">Tennis</strong>, <strong class="heroSportName">Basket</strong>, <strong class="heroSportName">Ciclismo</strong> e <strong class="heroSportName">Formula 1</strong>.</span><span class="heroIntroLine">Vinci i trofei per sbloccare i livelli.</span><span class="heroIntroLine">In <strong class="heroAllSports">All sports</strong> trovi anche le domande olimpiche e costruisci la tua carriera.</span><span class="heroIntroLine">Gratis, senza registrazione.</span></span><span class="heroMobileIntro"><span class="heroIntroLine">Scegli uno sport o prova <strong class="heroAllSports">All sports</strong>.</span><span class="heroIntroLine">Gratis, senza registrazione.</span></span></p><ul class="heroHighlights" aria-label="Le sfide di SportMasterQuiz">
 <li class="heroHighlight highlightQuiz"><span class="highlightIcon" aria-hidden="true">⚡</span><div class="highlightCopy"><strong>6 sezioni di quiz</strong><span>Trova la tua sfida</span></div></li>
 <li class="heroHighlight highlightLevels"><span class="highlightIcon" aria-hidden="true">🏆</span><div class="highlightCopy"><strong>3 livelli da conquistare</strong><span>Vinci i trofei e sali di livello</span></div></li>
 <li class="heroHighlight highlightCareer"><span class="highlightIcon" aria-hidden="true">🔥</span><div class="highlightCopy"><strong>Costruisci la tua carriera</strong><span>Scala i titoli in All sports</span></div></li>
@@ -481,7 +492,7 @@ function resetCareer(){
 
 function shuffled(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function topicMatch(q,topic){return topic==='sagome'?q.cat==='formula1'&&q.format==='circuito':topic==='serie_all'?['serie_storica','serie_moderna'].includes(q.topic):q.topic===topic}
-function toggle(view){['viewHome','viewCategory','viewQuiz','viewAbout'].forEach(v=>el(v).classList.toggle('hidden',v!==view));window.scrollTo(0,0)}
+function toggle(view){stopQuizCelebration();stopQuizSound();['viewHome','viewCategory','viewQuiz','viewAbout'].forEach(v=>el(v).classList.toggle('hidden',v!==view));window.scrollTo(0,0)}
 function goHome(){clearSourceReturn();toggle('viewHome')}
 function showAbout(){toggle('viewAbout')}
 const trainingLevelChoice={};
@@ -605,6 +616,140 @@ async function copySiteLink(){
   status.textContent=copied?'Link copiato! Incollalo dove preferisci.':'Il link è selezionato: usa Copia dal tuo dispositivo.';
  }
 }
+
+// Optional, locally synthesized feedback. No audio is played on page load.
+const quizEffects={enabled:false,available:typeof(window.AudioContext||window.webkitAudioContext)==='function',context:null,master:null,voices:new Set(),generation:0,restoring:false,animation:null};
+const quizAudioStorageKey='smq_audio_v1';
+function savedQuizAudio(){try{return localStorage.getItem(quizAudioStorageKey)==='on'}catch(e){return false}}
+function renderQuizAudioControl(announce=false){
+ const button=el('quizAudioToggle');if(!button)return;
+ const enabled=quizEffects.enabled&&quizEffects.available;
+ button.disabled=!quizEffects.available;button.setAttribute('aria-pressed',String(enabled));
+ const label=!quizEffects.available?'Audio non disponibile in questo browser':enabled?'Disattiva i suoni':'Attiva i suoni';
+ button.setAttribute('aria-label',label);button.title=label;
+ button.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4Z"/>'+(enabled?'<path d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/>':'<path d="m16 9 5 6m0-6-5 6"/>')+'</svg>';
+ if(announce)el('quizAudioStatus').textContent=!quizEffects.available?'Audio non disponibile in questo browser.':enabled?'Suoni attivati.':'Suoni disattivati.';
+}
+function ensureQuizAudio(){
+ if(!quizEffects.enabled||!quizEffects.available)return null;
+ try{
+  if(!quizEffects.context||quizEffects.context.state==='closed'){
+   const Audio=window.AudioContext||window.webkitAudioContext;
+   quizEffects.context=new Audio();quizEffects.master=quizEffects.context.createGain();
+   quizEffects.master.gain.value=.38;quizEffects.master.connect(quizEffects.context.destination);
+  }
+  return quizEffects.context;
+ }catch(e){quizEffects.available=false;renderQuizAudioControl(true);return null}
+}
+function unlockQuizAudio(){
+ if(!quizEffects.enabled||document.hidden)return;
+ const context=ensureQuizAudio();
+ if(context&&context.state==='suspended')try{Promise.resolve(context.resume()).catch(()=>{})}catch(e){}
+}
+function stopQuizSound(){
+ quizEffects.generation++;
+ for(const voice of quizEffects.voices){
+  try{const now=voice.context.currentTime;voice.gain.gain.cancelScheduledValues(now);voice.gain.gain.setTargetAtTime(0,now,.005);voice.oscillator.stop(now+.025)}catch(e){}
+ }
+ quizEffects.voices.clear();
+}
+function toggleQuizAudio(){
+ if(!quizEffects.available)return;
+ quizEffects.enabled=!quizEffects.enabled;
+ try{localStorage.setItem(quizAudioStorageKey,quizEffects.enabled?'on':'off')}catch(e){}
+ renderQuizAudioControl(true);
+ if(quizEffects.enabled)playQuizSound('preview');else stopQuizSound();
+}
+function quizTone(context,output,frequency,start,duration,shape='sine',volume=.14,endFrequency=null){
+ const oscillator=context.createOscillator(),gain=context.createGain();
+ if(shape==='brass'){
+  const real=new Float32Array(8),imag=new Float32Array([0,1,.62,.37,.22,.13,.08,.04]);
+  oscillator.setPeriodicWave(context.createPeriodicWave(real,imag));
+ }else oscillator.type=shape;
+ oscillator.frequency.setValueAtTime(frequency,start);
+ if(endFrequency)oscillator.frequency.exponentialRampToValueAtTime(endFrequency,start+duration);
+ const attack=shape==='brass'?.025:.008;
+ gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(volume,start+attack);
+ if(shape==='brass')gain.gain.setValueAtTime(volume*.85,start+duration*.55);
+ gain.gain.exponentialRampToValueAtTime(.0001,start+duration);
+ oscillator.connect(gain);gain.connect(output);
+ const voice={context,oscillator,gain};if(context===quizEffects.context)quizEffects.voices.add(voice);
+ oscillator.onended=()=>{quizEffects.voices.delete(voice);try{oscillator.disconnect();gain.disconnect()}catch(e){}};
+ oscillator.start(start);oscillator.stop(start+duration+.015);
+}
+function scheduleQuizCue(context,output,kind,start=context.currentTime+.015){
+ if(kind==='preview')quizTone(context,output,660,start,.12,'sine',.12);
+ else if(kind==='correct'){
+  quizTone(context,output,880,start,.19,'sine',.17);
+  quizTone(context,output,1318.51,start+.105,.2,'sine',.14);
+ }else if(kind==='partial')quizTone(context,output,659.25,start,.21,'sine',.13,783.99);
+ else if(kind==='wrong')quizTone(context,output,185,start,.14,'triangle',.12,110);
+ else if(kind==='trophy'){
+  [[523.25,0,.16],[659.25,.17,.16],[783.99,.34,.22],[1046.5,.57,.37]].forEach(([frequency,delay,length])=>quizTone(context,output,frequency,start+delay,length,'brass',.14));
+ }else if(kind==='career'){
+  [[523.25,0,.21],[659.25,.13,.23],[783.99,.27,.25],[1046.5,.43,.29],[1318.51,.62,.36]].forEach(([frequency,delay,length])=>quizTone(context,output,frequency,start+delay,length,'sine',.15));
+ }
+}
+function playQuizSound(kind){
+ if(!quizEffects.enabled||quizEffects.restoring||document.hidden)return;
+ stopQuizSound();const generation=quizEffects.generation,context=ensureQuizAudio();if(!context)return;
+ const play=()=>{if(generation!==quizEffects.generation||!quizEffects.enabled||quizEffects.restoring||document.hidden||context.state!=='running')return;try{scheduleQuizCue(context,quizEffects.master,kind)}catch(e){stopQuizSound()}};
+ if(context.state==='running')play();
+ else try{Promise.resolve(context.resume()).then(play).catch(()=>{})}catch(e){}
+}
+function stopQuizCelebration(){
+ const animation=quizEffects.animation;
+ if(animation){cancelAnimationFrame(animation.frame);clearTimeout(animation.timer);animation.canvas?.remove();quizEffects.animation=null;}
+ el('resultPrize')?.classList.remove('celebrateTrophy','celebrateCareer');
+}
+function celebrateQuizAchievement(kind){
+ if(quizEffects.restoring||document.hidden)return;
+ stopQuizCelebration();playQuizSound(kind);
+ const prize=el('resultPrize');prize.classList.add(kind==='career'?'celebrateCareer':'celebrateTrophy');
+ const animation={canvas:null,frame:0,timer:0};quizEffects.animation=animation;
+ animation.timer=setTimeout(stopQuizCelebration,1950);
+ if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
+ const canvas=document.createElement('canvas');canvas.id='quizCelebrationCanvas';canvas.className='quizCelebrationCanvas';canvas.setAttribute('aria-hidden','true');
+ const width=innerWidth,height=innerHeight,ratio=Math.min(devicePixelRatio||1,1.5);
+ canvas.width=Math.round(width*ratio);canvas.height=Math.round(height*ratio);
+ let context;try{context=canvas.getContext('2d')}catch(e){}
+ if(!context)return;
+ context.setTransform(ratio,0,0,ratio,0,0);document.body.append(canvas);animation.canvas=canvas;
+ const colors=['#ffd475','#bbf34c','#69d8fb','#ff9aaf','#f6edca'],particles=[];
+ if(kind==='trophy'){
+  for(let i=0;i<72;i++)particles.push({x:Math.random()*width,y:-Math.random()*height*.32,vx:(Math.random()-.5)*110,vy:150+Math.random()*170,size:3+Math.random()*4,angle:Math.random()*Math.PI,spin:(Math.random()-.5)*6,color:colors[i%colors.length]});
+ }else{
+  [[.27,.3,0],[.73,.34,.36],[.5,.23,.72]].forEach(([x,y,delay],burst)=>{
+   for(let i=0;i<24;i++){const angle=i*Math.PI/12,speed=65+Math.random()*105;particles.push({x:x*width,y:Math.min(y*height,280),vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,delay,life:.7+Math.random()*.3,color:colors[(i+burst)%colors.length]})}
+  });
+ }
+ const start=performance.now();let previous=start;
+ const draw=now=>{
+  if(quizEffects.animation!==animation)return;
+  const elapsed=(now-start)/1000,dt=Math.min((now-previous)/1000,.035);previous=now;
+  if(elapsed>=1.85){stopQuizCelebration();return}
+  context.clearRect(0,0,width,height);
+  for(const particle of particles){
+   if(kind==='trophy'){
+    particle.x+=particle.vx*dt;particle.y+=particle.vy*dt;particle.vy+=180*dt;particle.angle+=particle.spin*dt;
+    context.globalAlpha=Math.min(1,(1.85-elapsed)/.5)*.9;context.fillStyle=particle.color;
+    context.save();context.translate(particle.x,particle.y);context.rotate(particle.angle);context.fillRect(-particle.size/2,-particle.size,particle.size,particle.size*1.7);context.restore();
+   }else{
+    const age=elapsed-particle.delay;if(age<0||age>particle.life)continue;
+    const x=particle.x+particle.vx*age,y=particle.y+particle.vy*age+32*age*age;
+    context.globalAlpha=Math.min(1,age/.055)*(1-age/particle.life)*.9;context.strokeStyle=particle.color;context.lineWidth=2;context.lineCap='round';context.beginPath();context.moveTo(x-particle.vx*.025,y-particle.vy*.025);context.lineTo(x,y);context.stroke();
+   }
+  }
+  animation.frame=requestAnimationFrame(draw);
+ };
+ animation.frame=requestAnimationFrame(draw);
+}
+quizEffects.enabled=savedQuizAudio();renderQuizAudioControl();
+document.addEventListener('pointerdown',unlockQuizAudio,{capture:true,passive:true});
+document.addEventListener('keydown',event=>{if(!event.repeat)unlockQuizAudio()},{capture:true});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){stopQuizSound();stopQuizCelebration()}});
+window.addEventListener('pagehide',()=>{stopQuizSound();stopQuizCelebration()});
+window.addEventListener('storage',event=>{if(event.key===quizAudioStorageKey||event.key===null){quizEffects.enabled=savedQuizAudio();renderQuizAudioControl();if(!quizEffects.enabled)stopQuizSound()}});
 
 const formatNames={griglia:'Griglia',circuito:'Circuito',classica:'Domanda classica',carriera:'Carriera a tappe',indizi:'Chi sono?',ordina:'Metti in ordine',abbina:'Abbina',stima:'Stima'};
 let gameWeighted=0,gamePoints=0,revealedHints=1,orderState=[],matchState=[],matchChoices=[],matchRows=[];
@@ -946,6 +1091,7 @@ function answer(idx){
 function finishQuestion(correct,points,detail){
  if(selected!==null)return;clearSourceReturn();const q=current[step];selected=correct?'correct':'wrong';
  questionResults[currentQuizSlot()]={kind:correct?'correct':points>0?'partial':'wrong',points,id:q.id};
+ playQuizSound(correct?'correct':points>0?'partial':'wrong');
  if(correct)score++;gamePoints+=points;gameWeighted+=points*(careerWeights[q.level]||1);
  el('formatPoints').classList.add('hidden');el('quizActions').classList.remove('hidden');
  el('formatPoints').textContent='+'+points+(points===1?' PUNTO':' PUNTI');
@@ -964,7 +1110,7 @@ function finishQuestion(correct,points,detail){
 function finishGame(){
  if(finishedGameSaved||!current.length||step<current.length||selected===null)return;clearSourceReturn();finishedGameSaved=true;
  el('quizPlay').classList.add('hidden');el('quizResult').classList.remove('hidden');el('quizLevelBadge').classList.add('hidden');
- const max=current.length*3,prize=el('resultPrize');let shareText=null;prize.replaceChildren();
+ const max=current.length*3,prize=el('resultPrize');let shareText=null,achievement=null;prize.replaceChildren();
  el('finalScore').textContent=gamePoints+' / '+max+' punti';
  el('resultText').textContent=score+'/'+current.length+' sfide risolte. '+(gamePoints===max?'Percorso perfetto!':gamePoints>=current.length*2?'Una bella gara: continua così!':'Ogni prova è un nuovo allenamento.');
  const line=(text,cls)=>{const p=document.createElement('p');if(cls)p.className=cls;p.textContent=text;prize.append(p)};
@@ -975,7 +1121,9 @@ function finishGame(){
   const result=addCareerPoints(gameWeighted),next=careerNext(result.total);
   line('+'+fmtNum(result.earned)+' punti carriera','prizeMain');
   line('Hai fatto '+gamePoints+' punti partita: quelli delle domande Professionista valgono ×1,5, quelli Master ×2.');
-  line((result.promoted?'Nuovo titolo: '+careerTitle(result.total)+'! ':'Carriera All sports: '+careerTitle(result.total)+', '+fmtNum(result.total)+' punti. ')+(next?'Mancano '+fmtNum(next[0]-result.total)+' punti per diventare '+next[1]+'.':'Sei al titolo più alto.'));
+  if(result.promoted)line('🎆 Nuovo titolo: '+careerTitle(result.total)+'!','prizePromo');
+  line((result.promoted?'':'Carriera All sports: '+careerTitle(result.total)+', '+fmtNum(result.total)+' punti. ')+(next?'Mancano '+fmtNum(next[0]-result.total)+' punti per diventare '+next[1]+'.':'Sei al titolo più alto.'));
+  if(result.promoted)achievement='career';
   if(result.promoted)shareText='Sono diventato '+careerTitle(result.total)+' nella carriera All sports di SportMasterQuiz! Riesci a fare meglio?';
  }else{
   const name=trophyName(currentCat,playingLevel),sport=trophySports[currentCat];
@@ -983,6 +1131,7 @@ function finishGame(){
    line('Partita completata senza trofeo.','prizeMain');line('Per vincere il trofeo «'+name+'», ottieni almeno 24 punti su 30 in una partita da 10 domande.');
   }else if(gamePoints>=trophyPoints){
    const unlockedBefore=unlockedIndex(currentCat),result=awardTrophy(currentCat,playingLevel);
+   achievement='trophy';
    line('🏆 Trofeo conquistato: '+name+'!','prizeMain');
    line('Nella tua bacheca: «'+name+'» ×'+result.count+'.'+(result.star?' Hai guadagnato una nuova stella ★!':'')+(result.complete?' Hai conquistato tutti e tre i trofei di '+sport.name+'!':''));
    shareText='Ho vinto il trofeo «'+name+'» ('+sport.name+', livello '+careerLevelNames[playingLevel]+') su SportMasterQuiz con '+gamePoints+'/'+max+' punti! Riesci a fare meglio?';
@@ -998,6 +1147,7 @@ function finishGame(){
  const heading=el('quizResult').querySelector('h2');heading.textContent=isTrainingGame()?'Allenamento completato!':'Partita completata!';
  const back=el('resultBackBtn');back.textContent=isTrainingGame()?'Altri allenamenti':'Altri quiz';back.onclick=()=>{if(isTrainingGame()){openCategory(currentCat);scrollQuizTo(el('trainingTitle'))}else goHome()};
  el('resultReplayBtn').textContent=isTrainingGame()?'Ripeti l’allenamento':'Gioca ancora';heading.tabIndex=-1;heading.focus({preventScroll:true});scrollQuizTo(heading);
+ if(achievement)celebrateQuizAchievement(achievement);
 }
 
 function nextQuestion(){if(selected===null)return;clearSourceReturn();step++;if(step>=current.length)finishGame();else renderQuestion()}
@@ -1128,6 +1278,8 @@ function restoreSourceReturn(){
   // Replay only the current answer to rebuild its locked controls and feedback.
   // This does not call startQuiz/nextQuestion or write career/trophy progress.
   if(snapshot.selected!==null){
+   const previousRestoring=quizEffects.restoring;quizEffects.restoring=true;
+   try{
    if(q.format==='griglia')submitQuizGrid(true);
    else if(q.format==='ordina')submitOrder();
    else if(q.format==='abbina')submitMatches();
@@ -1137,6 +1289,7 @@ function restoreSourceReturn(){
     if(q.photo)el('playerPhoto').dataset.ready='true';answer(snapshot.answer);
    }
    if(selected!==snapshot.selected)throw Error('Saved answer does not match');
+   }finally{quizEffects.restoring=previousRestoring}
   }
   score=snapshot.score;gamePoints=snapshot.points;gameWeighted=snapshot.weighted;updateGameScore();clearSourceReturn();
   requestAnimationFrame(()=>{const target=selected!==null?el('explanation'):el('questionText');scrollQuizTo(target);target.focus({preventScroll:true})});
