@@ -617,7 +617,8 @@ const sessionEventKeys=q=>[...new Set([q.event,...(q.relatedEvents||[])].filter(
 function pick(pool,n,level,key,settings={}){
  const globalSeen=historyFor('all_sports'),seen=[...historyFor(key),...globalSeen];
  const last=new Map(seen.map((id,index)=>[id,index]));
- const age=q=>Math.max(-1,...factKeys(q).map(id=>last.has(id)?last.get(id):-1));
+ // Seeing an athlete's name in text does not mean their photograph has been seen.
+ const age=q=>Math.max(-1,...(q.photo?[q.id]:factKeys(q)).map(id=>last.has(id)?last.get(id):-1));
  const recentCut=seen.length-30,isRecent=q=>age(q)>=0&&age(q)>=recentCut;
  // Related facts stay separate questions, but do not crowd the same sessions.
  const rotationSeen=historyFor('editorial_recent').slice(-30);
